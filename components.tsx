@@ -44,7 +44,7 @@ export function Index({ state, posts }: IndexProps) {
             {state.avatar && (
               <div
                 class={[
-                  "bg-cover bg-center bg-no-repeat w-25 h-25 border-4 border-white",
+                  "bg-cover bg-center bg-no-repeat w-25 h-25 border-0",
                   state.avatarClass ?? "rounded-full",
                 ]
                   .filter(Boolean)
