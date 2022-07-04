@@ -30,6 +30,7 @@ export interface BlogSettings {
   lang?: string;
   timezone?: string;
   canonicalUrl?: string;
+  customScriptPath?: string;
 }
 
 export interface BlogState extends BlogSettings {

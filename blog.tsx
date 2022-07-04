@@ -124,7 +124,7 @@ function composeMiddlewares(state: BlogState) {
   return (
     req: Request,
     connInfo: ConnInfo,
-    inner: (req: Request, ctx: BlogContext) => Promise<Response>,
+    inner: (req: Request, ctx: BlogContext) => Promise<Response>
   ) => {
     const mws = state.middlewares?.reverse();
 
@@ -155,7 +155,7 @@ function composeMiddlewares(state: BlogState) {
 export async function configureBlog(
   url: string,
   isDev: boolean,
-  settings?: BlogSettings,
+  settings?: BlogSettings
 ): Promise<BlogState> {
   let directory;
 
@@ -182,9 +182,7 @@ async function loadContent(blogDirectory: string, isDev: boolean) {
   const postsDirectory = join(blogDirectory, "posts");
 
   // TODO(@satyarohith): not efficient for large number of posts.
-  for await (
-    const entry of walk(postsDirectory)
-  ) {
+  for await (const entry of walk(postsDirectory)) {
     if (entry.isFile && entry.path.endsWith(".md")) {
       await loadPost(postsDirectory, entry.path);
     }
@@ -224,8 +222,8 @@ async function loadPost(postsDirectory: string, path: string) {
     content: string;
   };
 
-  let snippet = data.snippet ?? data.abstract ?? data.summary ??
-    data.description;
+  let snippet =
+    data.snippet ?? data.abstract ?? data.summary ?? data.description;
   if (!snippet) {
     const maybeSnippet = content.split("\n\n")[0];
     if (maybeSnippet) {
@@ -252,10 +250,7 @@ async function loadPost(postsDirectory: string, path: string) {
   console.log("Load: ", post.pathname);
 }
 
-export async function handler(
-  req: Request,
-  ctx: BlogContext,
-) {
+export async function handler(req: Request, ctx: BlogContext) {
   const { state: blogState } = ctx;
   const { pathname } = new URL(req.url);
   const canonicalUrl = blogState.canonicalUrl || new URL(req.url).origin;
@@ -290,7 +285,7 @@ export async function handler(
       lang: blogState.lang,
       title: blogState.title ?? "My Blog",
       meta: {
-        "description": blogState.description,
+        description: blogState.description,
         "og:title": blogState.title,
         "og:description": blogState.description,
         "og:image": blogState.ogImage ?? blogState.cover,
@@ -299,19 +294,10 @@ export async function handler(
         "twitter:image": blogState.ogImage ?? blogState.cover,
         "twitter:card": blogState.ogImage ? "summary_large_image" : undefined,
       },
-      links: [
-        { href: canonicalUrl, rel: "canonical" },
-      ],
-      styles: [
-        ...(blogState.style ? [blogState.style] : []),
-      ],
+      links: [{ href: canonicalUrl, rel: "canonical" }],
+      styles: [...(blogState.style ? [blogState.style] : [])],
       scripts: IS_DEV ? [{ src: "/hmr.js" }] : undefined,
-      body: (
-        <Index
-          state={blogState}
-          posts={POSTS}
-        />
-      ),
+      body: <Index state={blogState} posts={POSTS} />,
     });
   }
 
@@ -322,7 +308,7 @@ export async function handler(
       lang: blogState.lang,
       title: post.title,
       meta: {
-        "description": post.snippet,
+        description: post.snippet,
         "og:title": post.title,
         "og:description": post.snippet,
         "og:image": post.ogImage,
@@ -336,10 +322,19 @@ export async function handler(
         `.markdown-body { --color-canvas-default: transparent !important; --color-canvas-subtle: #edf0f2; --color-border-muted: rgba(128,128,128,0.2); } .markdown-body img + p { margin-top: 16px; }`,
         ...(blogState.style ? [blogState.style] : []),
       ],
-      links: [
-        { href: `${canonicalUrl}${pathname}`, rel: "canonical" },
-      ],
-      scripts: IS_DEV ? [{ src: "/hmr.js" }] : undefined,
+      links: [{ href: `${canonicalUrl}${pathname}`, rel: "canonical" }],
+      scripts: IS_DEV
+        ? [
+            {
+              src: "/hmr.js",
+              ...(blogState.customScriptPath && {
+                src: `${blogState.customScriptPath}`,
+              }),
+            },
+          ]
+        : blogState.customScriptPath
+        ? [{ src: `${blogState.customScriptPath}` }]
+        : undefined,
       body: <PostPage post={post} state={blogState} />,
     });
   }
@@ -362,7 +357,7 @@ export async function handler(
 function serveRSS(
   req: Request,
   state: BlogState,
-  posts: Map<string, Post>,
+  posts: Map<string, Post>
 ): Response {
   const url = state.canonicalUrl
     ? new URL(state.canonicalUrl)
@@ -417,14 +412,14 @@ export function ga(gaKey: string): BlogMiddleware {
 
   return async function (
     request: Request,
-    ctx: BlogContext,
+    ctx: BlogContext
   ): Promise<Response> {
     let err: undefined | Error;
     let res: undefined | Response;
 
     const start = performance.now();
     try {
-      res = await ctx.next() as Response;
+      res = (await ctx.next()) as Response;
     } catch (e) {
       err = e;
       res = new Response("Internal server error", {
@@ -458,7 +453,7 @@ export function redirects(redirectMap: Record<string, string>): BlogMiddleware {
       return new Response(null, {
         status: 307,
         headers: {
-          "location": maybeRedirect,
+          location: maybeRedirect,
         },
       });
     }
