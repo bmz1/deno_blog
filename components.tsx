@@ -27,8 +27,8 @@ export function Index({ state, posts }: IndexProps) {
   for (const [_key, post] of posts.entries()) {
     postIndex.push(post);
   }
-  postIndex.sort((a, b) =>
-    (b.publishDate?.getTime() ?? 0) - (a.publishDate?.getTime() ?? 0)
+  postIndex.sort(
+    (a, b) => (b.publishDate?.getTime() ?? 0) - (a.publishDate?.getTime() ?? 0)
   );
 
   return (
@@ -46,7 +46,9 @@ export function Index({ state, posts }: IndexProps) {
                 class={[
                   "bg-cover bg-center bg-no-repeat w-25 h-25 border-4 border-white",
                   state.avatarClass ?? "rounded-full",
-                ].filter(Boolean).join(" ")}
+                ]
+                  .filter(Boolean)
+                  .join(" ")}
                 style={{ backgroundImage: `url(${state.avatar})` }}
               />
             )}
@@ -73,7 +75,7 @@ export function Index({ state, posts }: IndexProps) {
                     Icon = IconEmail;
                   } else {
                     const icon = socialAppIcons.get(
-                      url.hostname.replace(/^www\./, ""),
+                      url.hostname.replace(/^www\./, "")
                     );
                     if (icon) {
                       Icon = icon;
@@ -124,9 +126,14 @@ function PostCard({ post, timezone }: { post: Post; timezone: string }) {
       <p class="text-gray-500/80">
         <PrettyDate date={post.publishDate} timezone={timezone} />
       </p>
-      <p class="mt-3 text-gray-600 dark:text-gray-400">
-        {post.snippet}
-      </p>
+      <p class="mt-3 text-gray-600 dark:text-gray-400">{post.snippet}</p>
+      {post.tags?.length ? (
+        <div class="flex gap-1 flex-wrap mt-2">
+          {post.tags.map((tag) => (
+            <p class="text-black bg-neutral-100 rounded p-2">{tag}</p>
+          ))}
+        </div>
+      ) : null}
       <p class="mt-3">
         <a
           class="leading-tight text-gray-900 dark:text-gray-100 inline-block border-b-1 border-gray-600 hover:text-gray-500 hover:border-gray-500 transition-colors"
@@ -180,12 +187,17 @@ export function PostPage({ post, state }: PostPageProps) {
         </h1>
         <p class="mt-1 text-gray-500">
           {(state.author || post.author) && (
-            <span>
-              By {state.author || post.author} at {" "}
-            </span>
+            <span>By {state.author || post.author} at </span>
           )}
           <PrettyDate date={post.publishDate} timezone={state.timezone} />
         </p>
+        {post.tags?.length ? (
+          <div class="flex gap-1 flex-wrap mt-2">
+            {post.tags.map((tag) => (
+              <p class="text-black bg-neutral-100 rounded p-2">{tag}</p>
+            ))}
+          </div>
+        ) : null}
         <div
           class="mt-8 markdown-body"
           data-color-mode="auto"
@@ -207,8 +219,7 @@ function Footer(props: { author?: string }) {
     <footer class="mt-20 pb-16 lt-sm:pb-8 lt-sm:mt-16">
       <p class="flex items-center gap-2.5 text-gray-400/800 dark:text-gray-500/800 text-sm">
         <span>
-          &copy; {new Date().getFullYear()} {props.author} &middot; Powered by
-          {" "}
+          &copy; {new Date().getFullYear()} {props.author} &middot; Powered by{" "}
           <a
             class="inline-flex items-center gap-1 underline hover:text-gray-800 dark:hover:text-gray-200 transition-colors"
             href="https://deno.land/x/blog"
@@ -228,12 +239,12 @@ function Footer(props: { author?: string }) {
   );
 }
 
-function Tooltip(
-  { children }: { children: string },
-) {
+function Tooltip({ children }: { children: string }) {
   return (
     <div
-      className={"absolute top-10 px-3 h-8 !leading-8 bg-black/80 text-white text-sm rounded-md whitespace-nowrap opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity"}
+      className={
+        "absolute top-10 px-3 h-8 !leading-8 bg-black/80 text-white text-sm rounded-md whitespace-nowrap opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity"
+      }
     >
       <span
         className="block absolute text-black/80"

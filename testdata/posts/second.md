@@ -2,6 +2,7 @@
 title: Second post
 publish_date: 2022-05-02
 abstract: This is the second post.
+tags: ['asd', 'qwe']
 ---
 
 <img src="second/hello2.png"/>

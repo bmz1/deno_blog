@@ -44,6 +44,7 @@ export interface Post {
   publishDate: Date;
   author?: string;
   snippet?: string;
+  tags?: string[];
   coverHtml?: string;
   background?: string;
   /** An image URL which is used in the OpenGraph og:image tag. */

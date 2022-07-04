@@ -219,7 +219,8 @@ async function loadPost(postsDirectory: string, path: string) {
   pathname = pathname.slice(0, -3);
 
   const { content, data } = frontMatter(contents) as {
-    data: Record<string, string>;
+    // deno-lint-ignore no-explicit-any
+    data: Record<string, any>;
     content: string;
   };
 
@@ -242,6 +243,7 @@ async function loadPost(postsDirectory: string, path: string) {
     pathname: data.pathname ?? pathname,
     publishDate: new Date(data.publish_date),
     snippet,
+    tags: data.tags ?? [],
     markdown: content,
     coverHtml: data.cover_html,
     ogImage: data["og:image"],
