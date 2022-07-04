@@ -1,5 +1,6 @@
 {
   "tasks": {
-    "test": "deno test --no-check=remote --allow-read"
+    "test": "deno test --no-check=remote --allow-read",
+    "preview": "deno run --allow-net --allow-read ./testdata/my_blog.ts",
   }
 }

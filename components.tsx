@@ -130,7 +130,7 @@ function PostCard({ post, timezone }: { post: Post; timezone: string }) {
       {post.tags?.length ? (
         <div class="flex gap-1 flex-wrap mt-2">
           {post.tags.map((tag) => (
-            <p class="text-black bg-neutral-100 rounded p-2">{tag}</p>
+            <p class="text-black bg-neutral-100 dark:text-gray-400 dark:bg-stone-600 rounded p-2">{tag}</p>
           ))}
         </div>
       ) : null}
@@ -194,7 +194,7 @@ export function PostPage({ post, state }: PostPageProps) {
         {post.tags?.length ? (
           <div class="flex gap-1 flex-wrap mt-2">
             {post.tags.map((tag) => (
-              <p class="text-black bg-neutral-100 rounded p-2">{tag}</p>
+              <p class="text-black bg-neutral-100 dark:text-gray-400 dark:bg-stone-600 rounded p-2">{tag}</p>
             ))}
           </div>
         ) : null}
